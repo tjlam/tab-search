@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component, KeyboardEvent } from 'react';
+import styled from 'styled-components';
+import { TabList } from './TabList';
 
 declare global {
   interface Window {
@@ -9,49 +9,38 @@ declare global {
 }
 
 type State = {
-  tabData: any;
+  allTabData: any;
 }
+
+const Popup = styled.div`
+  width: 1000px;
+  height: 1000px;
+`
 
 export class App extends Component<{}, State> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      tabData: null
+      allTabData: []
     }
   }
 
   componentDidMount() {
     window.chrome.tabs.query({currentWindow: true}, (allTabs: any) => {
-      console.log(allTabs);
       this.setState({
-        tabData: allTabs
+        allTabData: allTabs
       });
-      console.log(this.state);
     });
   }
 
   render() {
-    const { tabData } = this.state;
-    if (tabData) {
-      console.log(tabData);
-    }
+    const { allTabData } = this.state;
+    const filteredTabData = allTabData;
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Popup>
+        <TabList filteredTabData={filteredTabData} />
+      </Popup>
     );
   }
 }
