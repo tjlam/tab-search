@@ -5,7 +5,7 @@ type TabListProps = {
   filteredTabData: any,
 }
 
-let currentSelection = 1;
+let currentSelection = 0;
 
 export class TabList extends Component<TabListProps, {}> {
 
@@ -17,14 +17,14 @@ export class TabList extends Component<TabListProps, {}> {
         // ctrl i -> go up
         // @ts-ignore
         this.refs[`tabcard${currentSelection}`].unFocus();
-        currentSelection = (currentSelection - 1) < 0 ? filteredTabData.length - 1 : currentSelection - 1;
+        currentSelection = Math.max(currentSelection - 1, 0);
         // @ts-ignore
         this.refs[`tabcard${currentSelection}`].focus();
       } else if ((e.ctrlKey && e.which === 75) || e.which === 40) {
         // ctrl k -> go down
         // @ts-ignore
         this.refs[`tabcard${currentSelection}`].unFocus();
-        currentSelection = (currentSelection + 1) % filteredTabData.length;
+        currentSelection = Math.min(currentSelection + 1, filteredTabData.length - 1);
         // @ts-ignore
         this.refs[`tabcard${currentSelection}`].focus();
       } else if (e.key === 'Enter') {
@@ -47,6 +47,7 @@ export class TabList extends Component<TabListProps, {}> {
               id={item.id}
               url={item.url}
               favIconUrl={item.favIconUrl}
+              defaultFocus={index === 0}
             />
           )
         ) : null }

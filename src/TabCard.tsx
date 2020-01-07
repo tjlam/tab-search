@@ -6,18 +6,20 @@ type TabCardProps = {
   id: number,
   url: string,
   favIconUrl: string,
+  defaultFocus?: boolean
 }
 
 type TabCardState = {
   inFocus: boolean,
 }
 
-type TitleProps = {
-  underline: boolean,
+type CardProps = {
+  highlighted: boolean,
 }
 
 const Card = styled.div`
   padding: 5px;
+  background-color: ${(props: CardProps) => props.highlighted ? "#4b9fe3" : "none" };
 `;
 
 const Icon = styled.img`
@@ -30,7 +32,6 @@ const Icon = styled.img`
 const Title = styled.h1`
   font-family: 'Courier New', Courier, monospace;
   font-size: 1.5em;
-  text-decoration: ${(props: TitleProps) => props.underline ? "underline" : "none"}
 `;
 
 const Url = styled.p`
@@ -42,7 +43,7 @@ export class TabCard extends Component<TabCardProps, TabCardState> {
   constructor(props: TabCardProps) {
     super(props);
     this.state = {
-      inFocus: false,
+      inFocus: this.props.defaultFocus || false,
     }
     this.navigateToTab = this.navigateToTab.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -78,8 +79,8 @@ export class TabCard extends Component<TabCardProps, TabCardState> {
     const { inFocus } = this.state;
 
     return (
-      <Card id={`${id}`} onClick={this.handleClick}>
-        <Title underline={inFocus}>
+      <Card id={`${id}`} onClick={this.handleClick} highlighted={inFocus}>
+        <Title>
           <span><Icon src={favIconUrl}></Icon></span>
           { title }
         </Title>
