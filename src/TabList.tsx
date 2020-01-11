@@ -46,6 +46,7 @@ export class TabList extends Component<TabListProps, {}> {
               title={item.title}
               id={item.id}
               url={item.url}
+              letterMatchMap={item.letterMatchMap}
               favIconUrl={item.favIconUrl}
               defaultFocus={index === 0}
             />

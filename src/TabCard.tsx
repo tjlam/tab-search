@@ -6,6 +6,7 @@ type TabCardProps = {
   id: number,
   url: string,
   favIconUrl: string,
+  letterMatchMap: Array<number>,
   defaultFocus?: boolean
 }
 
@@ -35,9 +36,13 @@ const Title = styled.h1`
 `;
 
 const Url = styled.p`
-font-family: 'Courier New', Courier, monospace;
-font-size: 1em;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1em;
 `
+
+const Bold = styled.span`
+  color: blue;
+`;
 
 export class TabCard extends Component<TabCardProps, TabCardState> {
   constructor(props: TabCardProps) {
@@ -67,6 +72,28 @@ export class TabCard extends Component<TabCardProps, TabCardState> {
   unFocus() {
     this.setState({ inFocus: false });
   }
+
+  formatTitle(inputTitle: string, letterMatchMap: Array<number>) {
+    if (!letterMatchMap || letterMatchMap.length === 0) {
+      return inputTitle;
+    }
+    let startIndex = 0;
+    const output: Array<any> = [];
+    letterMatchMap.forEach((index) => {
+      const unHighlighted = inputTitle.substring(startIndex, index);
+      startIndex = index;
+      const highlighted = inputTitle.substring(startIndex, index + 1);
+      startIndex += 1;
+      output.push(<span>{unHighlighted}</span>);
+      output.push(<Bold>{highlighted}</Bold>);
+    });
+    output.push(inputTitle.substring(startIndex, inputTitle.length));
+    return (
+      <span>
+        {output}
+      </span>
+    );
+  }
   
   render() {
     const {
@@ -74,6 +101,7 @@ export class TabCard extends Component<TabCardProps, TabCardState> {
       title,
       url,
       favIconUrl,
+      letterMatchMap,
     } = this.props;
 
     const { inFocus } = this.state;
@@ -82,7 +110,7 @@ export class TabCard extends Component<TabCardProps, TabCardState> {
       <Card id={`${id}`} onClick={this.handleClick} highlighted={inFocus}>
         <Title>
           <span><Icon src={favIconUrl}></Icon></span>
-          { title }
+          { this.formatTitle(title, letterMatchMap) }
         </Title>
         <Url>{ url }</Url>
       </Card>
